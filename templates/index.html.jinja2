@@ -12,27 +12,70 @@
         <label for="frequency">Frequency:</label>
         <input type="range" id="frequency" name="frequency" min="20" max="20000" step="1" value="440">
     </div>
+    <div>
+        <label for="type">Type:</label>
+        <select id="type" name="type">
+            <option value="white">White</option>
+            <option value="pink">Pink</option>
+            <option value="brown">Brown</option>
+        </select>
+    </div>
     <button id="play">Play</button>
     <button id="stop">Stop</button>
 
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
         let gainNode = audioContext.createGain();
-        let bufferSize = 2 * audioContext.sampleRate;
-        let noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-        let output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
+        let whiteNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
+        let pinkNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
+        let brownNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
+
+        function generateNoise(buffer, type) {
+            let output = buffer.getChannelData(0);
+            if (type === 'white') {
+                for (let i = 0; i < buffer.length; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+            } else if (type === 'pink') {
+                let b0, b1, b2, b3, b4, b5, b6;
+                b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+                for (let i = 0; i < buffer.length; i++) {
+                    let white = Math.random() * 2 - 1;
+                    b0 = 0.99886 * b0 + white * 0.0555179;
+                    b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520;
+                    b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522;
+                    b5 = -0.7616 * b5 - white * 0.0168980;
+                    output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                    output[i] *= 0.11; // (roughly) compensate for gain
+                    b6 = white * 0.115926;
+                }
+            } else if (type === 'brown') {
+                let lastOut = 0.0;
+                for (let i = 0; i < buffer.length; i++) {
+                    let white = Math.random() * 2 - 1;
+                    output[i] = (lastOut + (0.02 * white)) / 1.02;
+                    lastOut = output[i];
+                    output[i] *= 3.5; // (roughly) compensate for gain
+                }
+            }
         }
 
+        generateNoise(whiteNoiseBuffer, 'white');
+        generateNoise(pinkNoiseBuffer, 'pink');
+        generateNoise(brownNoiseBuffer, 'brown');
+
         document.getElementById('play').addEventListener('click', function() {
-            let whiteNoise = audioContext.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
-            whiteNoise.connect(gainNode);
+            let type = document.getElementById('type').value;
+            let noiseBuffer = type === 'white' ? whiteNoiseBuffer : type === 'pink' ? pinkNoiseBuffer : brownNoiseBuffer;
+            let noise = audioContext.createBufferSource();
+            noise.buffer = noiseBuffer;
+            noise.loop = true;
+            noise.connect(gainNode);
             gainNode.connect(audioContext.destination);
             gainNode.gain.setValueAtTime(document.getElementById('volume').value, audioContext.currentTime);
-            whiteNoise.start();
+            noise.start();
         });
 
         document.getElementById('stop').addEventListener('click', function() {
