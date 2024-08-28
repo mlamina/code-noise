@@ -3,6 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
     <section class="section">
         <div class="container">
             <h2 class="title">Background Noise Generator</h2>
@@ -15,7 +16,7 @@
                         <div class="field">
                             <label class="label" for="white-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0.5">
+                                <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
                         <div class="field">
@@ -32,7 +33,7 @@
                         <div class="field">
                             <label class="label" for="pink-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0.5">
+                                <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
                         <div class="field">
@@ -49,7 +50,7 @@
                         <div class="field">
                             <label class="label" for="brown-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0.5">
+                                <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
                         <div class="field">
@@ -64,12 +65,12 @@
                         <h3 class="subtitle">Ocean Waves</h3>
                         <p class="content">Add some ocean vibes into the mix</p>
                         <div class="field">
-                            <iframe id="youtube-player" width="100%" height="200" src="https://www.youtube.com/embed/Nep1qytq9JM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <div id="youtube-player"></div>
                         </div>
                         <div class="field">
                             <label class="label" for="youtube-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="youtube-volume" name="youtube-volume" min="0" max="100" step="1" value="50">
+                                <input class="slider is-fullwidth" type="range" id="youtube-volume" name="youtube-volume" min="0" max="100" step="1" value="0">
                             </div>
                         </div>
                         <div class="field">
@@ -133,7 +134,7 @@
             noise.loop = true;
             noise.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            gainNode.gain.setValueAtTime(document.getElementById(volumeId).value, audioContext.currentTime);
+            gainNode.gain.setValueAtTime($('#' + volumeId).val(), audioContext.currentTime);
             noise.start();
             return { noise, gainNode };
         }
@@ -143,52 +144,56 @@
         function toggleNoise(noiseObj, buffer, volumeId, buttonId) {
             if (!noiseObj) {
                 noiseObj = playNoise(buffer, volumeId);
-                document.getElementById(buttonId).innerText = 'Stop';
-                document.getElementById(buttonId).classList.remove('is-success');
-                document.getElementById(buttonId).classList.add('is-danger');
+                $('#' + buttonId).text('Stop').removeClass('is-success').addClass('is-danger');
             } else {
                 noiseObj.noise.stop();
                 noiseObj = null;
-                document.getElementById(buttonId).innerText = 'Play';
-                document.getElementById(buttonId).classList.remove('is-danger');
-                document.getElementById(buttonId).classList.add('is-success');
+                $('#' + buttonId).text('Play').removeClass('is-danger').addClass('is-success');
             }
             return noiseObj;
         }
 
-        document.getElementById('white-toggle').addEventListener('click', function() {
+        $('#white-toggle').on('click', function() {
             whiteNoise = toggleNoise(whiteNoise, whiteNoiseBuffer, 'white-volume', 'white-toggle');
         });
 
-        document.getElementById('pink-toggle').addEventListener('click', function() {
+        $('#pink-toggle').on('click', function() {
             pinkNoise = toggleNoise(pinkNoise, pinkNoiseBuffer, 'pink-volume', 'pink-toggle');
         });
 
-        document.getElementById('brown-toggle').addEventListener('click', function() {
+        $('#brown-toggle').on('click', function() {
             brownNoise = toggleNoise(brownNoise, brownNoiseBuffer, 'brown-volume', 'brown-toggle');
         });
 
-        document.getElementById('white-volume').addEventListener('input', function() {
+        $('#white-volume').on('input', function() {
             if (whiteNoise) {
                 whiteNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
         });
 
-        document.getElementById('pink-volume').addEventListener('input', function() {
+        $('#pink-volume').on('input', function() {
             if (pinkNoise) {
                 pinkNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
         });
 
-        document.getElementById('brown-volume').addEventListener('input', function() {
+        $('#brown-volume').on('input', function() {
             if (brownNoise) {
                 brownNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
         });
+    </script>
 
+    <script src="https://www.youtube.com/iframe_api?v=1e3332" ></script>
+
+    <script>
         let youtubePlayer;
+
         function onYouTubeIframeAPIReady() {
             youtubePlayer = new YT.Player('youtube-player', {
+                height: '100',
+                width: '100%',
+                videoId: 'Nep1qytq9JM', // Replace with your video ID
                 events: {
                     'onReady': onPlayerReady
                 }
@@ -196,28 +201,19 @@
         }
 
         function onPlayerReady(event) {
-            document.getElementById('youtube-toggle').addEventListener('click', function() {
+            $('#youtube-toggle').on('click', function() {
                 if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
                     youtubePlayer.pauseVideo();
-                    document.getElementById('youtube-toggle').innerText = 'Play';
-                    document.getElementById('youtube-toggle').classList.remove('is-danger');
-                    document.getElementById('youtube-toggle').classList.add('is-success');
+                    $('#youtube-toggle').text('Play').removeClass('is-danger').addClass('is-success');
                 } else {
                     youtubePlayer.playVideo();
-                    document.getElementById('youtube-toggle').innerText = 'Stop';
-                    document.getElementById('youtube-toggle').classList.remove('is-success');
-                    document.getElementById('youtube-toggle').classList.add('is-danger');
+                    $('#youtube-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
                 }
             });
 
-            document.getElementById('youtube-volume').addEventListener('input', function() {
+            $('#youtube-volume').on('input', function() {
                 youtubePlayer.setVolume(this.value);
             });
         }
-
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 {% endblock %}
