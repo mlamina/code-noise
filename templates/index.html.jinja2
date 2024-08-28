@@ -6,54 +6,57 @@
     <section class="section">
         <div class="container">
             <h2 class="title">Background Noise Generator</h2>
-            <div class="field">
-                <label class="label" for="volume">Volume:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="volume" name="volume" min="0" max="1" step="0.01" value="0.5">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label" for="frequency">Frequency:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="frequency" name="frequency" min="20" max="20000" step="1" value="440">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label" for="type">Type:</label>
-                <div class="control">
-                    <div class="select is-fullwidth">
-                        <select id="type" name="type">
-                            <option value="white">White</option>
-                            <option value="pink">Pink</option>
-                            <option value="brown">Brown</option>
-                        </select>
+            <div class="columns">
+                <div class="column">
+                    <h3 class="subtitle">White Noise</h3>
+                    <div class="field">
+                        <label class="label" for="white-volume">Volume:</label>
+                        <div class="control">
+                            <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0.5">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" id="white-play">Play</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" id="white-stop">Stop</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label" for="bass">Bass:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="bass" name="bass" min="0" max="100" step="1" value="50">
+                <div class="column">
+                    <h3 class="subtitle">Pink Noise</h3>
+                    <div class="field">
+                        <label class="label" for="pink-volume">Volume:</label>
+                        <div class="control">
+                            <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0.5">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" id="pink-play">Play</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" id="pink-stop">Stop</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label" for="treble">Treble:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="treble" name="treble" min="0" max="100" step="1" value="50">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label" for="reverb">Reverb:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="reverb" name="reverb" min="0" max="100" step="1" value="50">
-                </div>
-            </div>
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-link" id="play">Play</button>
-                </div>
-                <div class="control">
-                    <button class="button is-link is-light" id="stop">Stop</button>
+                <div class="column">
+                    <h3 class="subtitle">Brown Noise</h3>
+                    <div class="field">
+                        <label class="label" for="brown-volume">Volume:</label>
+                        <div class="control">
+                            <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0.5">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" id="brown-play">Play</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" id="brown-stop">Stop</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,12 +64,6 @@
 
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        let gainNode = audioContext.createGain();
-        let bassFilter = audioContext.createBiquadFilter();
-        bassFilter.type = "lowshelf";
-        let trebleFilter = audioContext.createBiquadFilter();
-        trebleFilter.type = "highshelf";
-        let reverbNode = audioContext.createConvolver();
 
         let whiteNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
         let pinkNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
@@ -108,54 +105,75 @@
         generateNoise(pinkNoiseBuffer, 'pink');
         generateNoise(brownNoiseBuffer, 'brown');
 
-        $('#play').on('click', function() {
-            let type = $('#type').val();
-            let noiseBuffer = type === 'white' ? whiteNoiseBuffer : type === 'pink' ? pinkNoiseBuffer : brownNoiseBuffer;
+        function playNoise(buffer, volumeId) {
+            let gainNode = audioContext.createGain();
             let noise = audioContext.createBufferSource();
-            noise.buffer = noiseBuffer;
+            noise.buffer = buffer;
             noise.loop = true;
-            noise.connect(bassFilter);
-            bassFilter.connect(trebleFilter);
-            trebleFilter.connect(reverbNode);
-            reverbNode.connect(gainNode);
+            noise.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            gainNode.gain.setValueAtTime($('#volume').val(), audioContext.currentTime);
-            bassFilter.frequency.setValueAtTime(200, audioContext.currentTime);
-            bassFilter.gain.setValueAtTime($('#bass').val(), audioContext.currentTime);
-            trebleFilter.frequency.setValueAtTime(2000, audioContext.currentTime);
-            trebleFilter.gain.setValueAtTime($('#treble').val(), audioContext.currentTime);
-            // Reverb settings can be more complex, here we just set a simple gain for demonstration
-            reverbNode.buffer = whiteNoiseBuffer; // Simple reverb effect
+            gainNode.gain.setValueAtTime(document.getElementById(volumeId).value, audioContext.currentTime);
             noise.start();
+            return { noise, gainNode };
+        }
+
+        let whiteNoise, pinkNoise, brownNoise;
+
+        document.getElementById('white-play').addEventListener('click', function() {
+            if (!whiteNoise) {
+                whiteNoise = playNoise(whiteNoiseBuffer, 'white-volume');
+            }
         });
 
-        $('#stop').on('click', function() {
-            audioContext.close().then(function() {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                gainNode = audioContext.createGain();
-                bassFilter = audioContext.createBiquadFilter();
-                bassFilter.type = "lowshelf";
-                trebleFilter = audioContext.createBiquadFilter();
-                trebleFilter.type = "highshelf";
-                reverbNode = audioContext.createConvolver();
-            });
+        document.getElementById('white-stop').addEventListener('click', function() {
+            if (whiteNoise) {
+                whiteNoise.noise.stop();
+                whiteNoise = null;
+            }
         });
 
-        $('#volume').on('input', function() {
-            gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+        document.getElementById('pink-play').addEventListener('click', function() {
+            if (!pinkNoise) {
+                pinkNoise = playNoise(pinkNoiseBuffer, 'pink-volume');
+            }
         });
 
-        $('#bass').on('input', function() {
-            bassFilter.gain.setValueAtTime(this.value, audioContext.currentTime);
+        document.getElementById('pink-stop').addEventListener('click', function() {
+            if (pinkNoise) {
+                pinkNoise.noise.stop();
+                pinkNoise = null;
+            }
         });
 
-        $('#treble').on('input', function() {
-            trebleFilter.gain.setValueAtTime(this.value, audioContext.currentTime);
+        document.getElementById('brown-play').addEventListener('click', function() {
+            if (!brownNoise) {
+                brownNoise = playNoise(brownNoiseBuffer, 'brown-volume');
+            }
         });
 
-        $('#reverb').on('input', function() {
-            // Reverb settings can be more complex, here we just set a simple gain for demonstration
-            reverbNode.buffer = whiteNoiseBuffer; // Simple reverb effect
+        document.getElementById('brown-stop').addEventListener('click', function() {
+            if (brownNoise) {
+                brownNoise.noise.stop();
+                brownNoise = null;
+            }
+        });
+
+        document.getElementById('white-volume').addEventListener('input', function() {
+            if (whiteNoise) {
+                whiteNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+            }
+        });
+
+        document.getElementById('pink-volume').addEventListener('input', function() {
+            if (pinkNoise) {
+                pinkNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+            }
+        });
+
+        document.getElementById('brown-volume').addEventListener('input', function() {
+            if (brownNoise) {
+                brownNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+            }
         });
     </script>
 {% endblock %}
