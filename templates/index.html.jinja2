@@ -9,77 +9,25 @@
             <h2 class="title">Background Noise Generator</h2>
             <p class="subtitle">Welcome to the Background Noise Generator for Programmers. Adjust the sliders to customize your perfect background noise.</p>
             <div class="columns is-multiline is-variable is-8">
+                {% for noise in noises %}
                 <div class="column is-full">
                     <div class="box">
-                        <h3 class="subtitle">White Noise</h3>
-                        <p class="content">White noise is great for masking other sounds and improving focus.</p>
+                        <h3 class="subtitle">{{ noise.title }}</h3>
+                        <p class="content">{{ noise.description }}</p>
                         <div class="field">
                             <div class="control">
-                                <button class="button is-success" id="white-toggle">Play</button>
+                                <button class="button is-success" id="{{ noise.id }}-toggle">Play</button>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label" for="white-volume">Volume:</label>
+                            <label class="label" for="{{ noise.id }}-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0">
+                                <input class="slider is-fullwidth" type="range" id="{{ noise.id }}-volume" name="{{ noise.id }}-volume" min="0" max="{{ noise.max_volume }}" step="{{ noise.step }}" value="0">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column is-full">
-                    <div class="box">
-                        <h3 class="subtitle">Pink Noise</h3>
-                        <p class="content">Pink noise is softer and more soothing, ideal for relaxation.</p>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="pink-toggle">Play</button>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="pink-volume">Volume:</label>
-                            <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full">
-                    <div class="box">
-                        <h3 class="subtitle">Brown Noise</h3>
-                        <p class="content">Brown noise has a deeper sound, perfect for calming the mind.</p>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="brown-toggle">Play</button>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="brown-volume">Volume:</label>
-                            <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-full">
-                    <div class="box">
-                        <h3 class="subtitle">Ocean Waves</h3>
-                        <p class="content">Add some ocean vibes into the mix</p>
-                        <div class="field">
-                            <div id="youtube-player"></div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="youtube-toggle">Play</button>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="youtube-volume">Volume:</label>
-                            <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="youtube-volume" name="youtube-volume" min="0" max="100" step="1" value="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -87,9 +35,11 @@
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-        let whiteNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
-        let pinkNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
-        let brownNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
+        let noiseBuffers = {
+            white: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate),
+            pink: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate),
+            brown: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate)
+        };
 
         function generateNoise(buffer, type) {
             let output = buffer.getChannelData(0);
@@ -123,9 +73,9 @@
             }
         }
 
-        generateNoise(whiteNoiseBuffer, 'white');
-        generateNoise(pinkNoiseBuffer, 'pink');
-        generateNoise(brownNoiseBuffer, 'brown');
+        generateNoise(noiseBuffers.white, 'white');
+        generateNoise(noiseBuffers.pink, 'pink');
+        generateNoise(noiseBuffers.brown, 'brown');
 
         function playNoise(buffer, volumeId) {
             let gainNode = audioContext.createGain();
@@ -139,7 +89,7 @@
             return { noise, gainNode };
         }
 
-        let whiteNoise, pinkNoise, brownNoise;
+        let noises = {};
 
         function toggleNoise(noiseObj, buffer, volumeId, buttonId) {
             if (!noiseObj) {
@@ -153,35 +103,17 @@
             return noiseObj;
         }
 
-        $('#white-toggle').on('click', function() {
-            whiteNoise = toggleNoise(whiteNoise, whiteNoiseBuffer, 'white-volume', 'white-toggle');
+        {% for noise in noises %}
+        $('#{{ noise.id }}-toggle').on('click', function() {
+            noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
         });
 
-        $('#pink-toggle').on('click', function() {
-            pinkNoise = toggleNoise(pinkNoise, pinkNoiseBuffer, 'pink-volume', 'pink-toggle');
-        });
-
-        $('#brown-toggle').on('click', function() {
-            brownNoise = toggleNoise(brownNoise, brownNoiseBuffer, 'brown-volume', 'brown-toggle');
-        });
-
-        $('#white-volume').on('input', function() {
-            if (whiteNoise) {
-                whiteNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+        $('#{{ noise.id }}-volume').on('input', function() {
+            if (noises['{{ noise.id }}']) {
+                noises['{{ noise.id }}'].gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
         });
-
-        $('#pink-volume').on('input', function() {
-            if (pinkNoise) {
-                pinkNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
-            }
-        });
-
-        $('#brown-volume').on('input', function() {
-            if (brownNoise) {
-                brownNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
-            }
-        });
+        {% endfor %}
     </script>
 
     <script src="https://www.youtube.com/iframe_api?v=1e3332" ></script>
