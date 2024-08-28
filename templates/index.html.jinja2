@@ -84,26 +84,26 @@
         generateNoise(pinkNoiseBuffer, 'pink');
         generateNoise(brownNoiseBuffer, 'brown');
 
-        document.getElementById('play').addEventListener('click', function() {
-            let type = document.getElementById('type').value;
+        $('#play').on('click', function() {
+            let type = $('#type').val();
             let noiseBuffer = type === 'white' ? whiteNoiseBuffer : type === 'pink' ? pinkNoiseBuffer : brownNoiseBuffer;
             let noise = audioContext.createBufferSource();
             noise.buffer = noiseBuffer;
             noise.loop = true;
             noise.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            gainNode.gain.setValueAtTime(document.getElementById('volume').value, audioContext.currentTime);
+            gainNode.gain.setValueAtTime($('#volume').val(), audioContext.currentTime);
             noise.start();
         });
 
-        document.getElementById('stop').addEventListener('click', function() {
+        $('#stop').on('click', function() {
             audioContext.close().then(function() {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 gainNode = audioContext.createGain();
             });
         });
 
-        document.getElementById('volume').addEventListener('input', function() {
+        $('#volume').on('input', function() {
             gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
         });
     </script>
