@@ -6,55 +6,61 @@
     <section class="section">
         <div class="container">
             <h2 class="title">Background Noise Generator</h2>
-            <div class="columns">
-                <div class="column">
-                    <h3 class="subtitle">White Noise</h3>
-                    <div class="field">
-                        <label class="label" for="white-volume">Volume:</label>
-                        <div class="control">
-                            <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0.5">
+            <div class="columns is-multiline">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h3 class="subtitle">White Noise</h3>
+                        <div class="field">
+                            <label class="label" for="white-volume">Volume:</label>
+                            <div class="control">
+                                <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0.5">
+                            </div>
                         </div>
-                    </div>
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-link" id="white-play">Play</button>
-                        </div>
-                        <div class="control">
-                            <button class="button is-link is-light" id="white-stop">Stop</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <h3 class="subtitle">Pink Noise</h3>
-                    <div class="field">
-                        <label class="label" for="pink-volume">Volume:</label>
-                        <div class="control">
-                            <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0.5">
-                        </div>
-                    </div>
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-link" id="pink-play">Play</button>
-                        </div>
-                        <div class="control">
-                            <button class="button is-link is-light" id="pink-stop">Stop</button>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" id="white-play">Play</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light" id="white-stop">Stop</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="column">
-                    <h3 class="subtitle">Brown Noise</h3>
-                    <div class="field">
-                        <label class="label" for="brown-volume">Volume:</label>
-                        <div class="control">
-                            <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0.5">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h3 class="subtitle">Pink Noise</h3>
+                        <div class="field">
+                            <label class="label" for="pink-volume">Volume:</label>
+                            <div class="control">
+                                <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0.5">
+                            </div>
+                        </div>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" id="pink-play">Play</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light" id="pink-stop">Stop</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-link" id="brown-play">Play</button>
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h3 class="subtitle">Brown Noise</h3>
+                        <div class="field">
+                            <label class="label" for="brown-volume">Volume:</label>
+                            <div class="control">
+                                <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0.5">
+                            </div>
                         </div>
-                        <div class="control">
-                            <button class="button is-link is-light" id="brown-stop">Stop</button>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" id="brown-play">Play</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link is-light" id="brown-stop">Stop</button>
+                            </div>
                         </div>
                     </div>
                 </div>
