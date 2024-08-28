@@ -133,10 +133,14 @@
             if (!noiseObj) {
                 noiseObj = playNoise(buffer, volumeId);
                 document.getElementById(buttonId).innerText = 'Stop';
+                document.getElementById(buttonId).classList.remove('is-link');
+                document.getElementById(buttonId).classList.add('is-danger');
             } else {
                 noiseObj.noise.stop();
                 noiseObj = null;
                 document.getElementById(buttonId).innerText = 'Play';
+                document.getElementById(buttonId).classList.remove('is-danger');
+                document.getElementById(buttonId).classList.add('is-success');
             }
             return noiseObj;
         }
@@ -185,9 +189,13 @@
                 if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
                     youtubePlayer.pauseVideo();
                     document.getElementById('youtube-toggle').innerText = 'Play';
+                    document.getElementById('youtube-toggle').classList.remove('is-danger');
+                    document.getElementById('youtube-toggle').classList.add('is-success');
                 } else {
                     youtubePlayer.playVideo();
                     document.getElementById('youtube-toggle').innerText = 'Stop';
+                    document.getElementById('youtube-toggle').classList.remove('is-success');
+                    document.getElementById('youtube-toggle').classList.add('is-danger');
                 }
             });
         }
