@@ -9,73 +9,73 @@
             <h2 class="title">Background Noise Generator</h2>
             <p class="subtitle">Welcome to the Background Noise Generator for Programmers. Adjust the sliders to customize your perfect background noise.</p>
             <div class="columns is-multiline is-variable is-8">
-                <div class="column is-one-quarter">
-                    <div class="box" style="height: 100%;">
+                <div class="column is-full">
+                    <div class="box">
                         <h3 class="subtitle">White Noise</h3>
                         <p class="content">White noise is great for masking other sounds and improving focus.</p>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="white-toggle">Play</button>
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label" for="white-volume">Volume:</label>
                             <div class="control">
                                 <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="white-toggle">Play</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div class="column is-one-quarter">
-                    <div class="box" style="height: 100%;">
+                <div class="column is-full">
+                    <div class="box">
                         <h3 class="subtitle">Pink Noise</h3>
                         <p class="content">Pink noise is softer and more soothing, ideal for relaxation.</p>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="pink-toggle">Play</button>
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label" for="pink-volume">Volume:</label>
                             <div class="control">
                                 <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="pink-toggle">Play</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div class="column is-one-quarter">
-                    <div class="box" style="height: 100%;">
+                <div class="column is-full">
+                    <div class="box">
                         <h3 class="subtitle">Brown Noise</h3>
                         <p class="content">Brown noise has a deeper sound, perfect for calming the mind.</p>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="brown-toggle">Play</button>
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label" for="brown-volume">Volume:</label>
                             <div class="control">
                                 <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0">
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-success" id="brown-toggle">Play</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div class="column is-one-quarter">
-                    <div class="box" style="height: 100%;">
+                <div class="column is-full">
+                    <div class="box">
                         <h3 class="subtitle">Ocean Waves</h3>
                         <p class="content">Add some ocean vibes into the mix</p>
                         <div class="field">
                             <div id="youtube-player"></div>
                         </div>
                         <div class="field">
-                            <label class="label" for="youtube-volume">Volume:</label>
                             <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="youtube-volume" name="youtube-volume" min="0" max="100" step="1" value="0">
+                                <button class="button is-success" id="youtube-toggle">Play</button>
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label" for="youtube-volume">Volume:</label>
                             <div class="control">
-                                <button class="button is-success" id="youtube-toggle">Play</button>
+                                <input class="slider is-fullwidth" type="range" id="youtube-volume" name="youtube-volume" min="0" max="100" step="1" value="0">
                             </div>
                         </div>
                     </div>
