@@ -3,25 +3,43 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <h2>Background Noise Generator</h2>
-    <div>
-        <label for="volume">Volume:</label>
-        <input type="range" id="volume" name="volume" min="0" max="1" step="0.01" value="0.5">
-    </div>
-    <div>
-        <label for="frequency">Frequency:</label>
-        <input type="range" id="frequency" name="frequency" min="20" max="20000" step="1" value="440">
-    </div>
-    <div>
-        <label for="type">Type:</label>
-        <select id="type" name="type">
-            <option value="white">White</option>
-            <option value="pink">Pink</option>
-            <option value="brown">Brown</option>
-        </select>
-    </div>
-    <button id="play">Play</button>
-    <button id="stop">Stop</button>
+    <section class="section">
+        <div class="container">
+            <h2 class="title">Background Noise Generator</h2>
+            <div class="field">
+                <label class="label" for="volume">Volume:</label>
+                <div class="control">
+                    <input class="slider is-fullwidth" type="range" id="volume" name="volume" min="0" max="1" step="0.01" value="0.5">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label" for="frequency">Frequency:</label>
+                <div class="control">
+                    <input class="slider is-fullwidth" type="range" id="frequency" name="frequency" min="20" max="20000" step="1" value="440">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label" for="type">Type:</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select id="type" name="type">
+                            <option value="white">White</option>
+                            <option value="pink">Pink</option>
+                            <option value="brown">Brown</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" id="play">Play</button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" id="stop">Stop</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
