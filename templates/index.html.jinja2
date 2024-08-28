@@ -6,24 +6,18 @@
 
     <section class="section">
         <div class="container">
-            <div class="columns is-mobile is-vcentered">
-                <div class="column is-one-third">
-                    <h2 class="title">Background Noise Generator</h2>
-                </div>
-                <div class="column is-one-third has-text-centered">
-                    <label class="label" for="master-volume">Volume:</label>
-                    <input class="slider is-fullwidth" type="range" id="master-volume" name="master-volume" min="0" max="1" step="0.01" value="0.5">
-                </div>
-                <div class="column is-one-third has-text-right">
-                    <button class="button is-success" id="master-toggle">Play</button>
-                </div>
-            </div>
+            <h2 class="title">Background Noise Generator</h2>
             <p class="subtitle">Welcome to the Background Noise Generator for Programmers. Adjust the sliders to customize your perfect background noise.</p>
             <div class="columns is-multiline is-variable is-8">
                 <div class="column is-full">
                     <div class="box">
                         <h3 class="subtitle">White Noise</h3>
                         <p class="content">White noise is great for masking other sounds and improving focus.</p>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="white-toggle">Play</button>
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label" for="white-volume">Volume:</label>
                             <div class="control">
@@ -37,6 +31,11 @@
                         <h3 class="subtitle">Pink Noise</h3>
                         <p class="content">Pink noise is softer and more soothing, ideal for relaxation.</p>
                         <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="pink-toggle">Play</button>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label" for="pink-volume">Volume:</label>
                             <div class="control">
                                 <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0">
@@ -48,6 +47,11 @@
                     <div class="box">
                         <h3 class="subtitle">Brown Noise</h3>
                         <p class="content">Brown noise has a deeper sound, perfect for calming the mind.</p>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="brown-toggle">Play</button>
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label" for="brown-volume">Volume:</label>
                             <div class="control">
@@ -61,7 +65,12 @@
                         <h3 class="subtitle">Ocean Waves</h3>
                         <p class="content">Add some ocean vibes into the mix</p>
                         <div class="field">
-                            <div id="youtube-player" class="has-text-right"></div>
+                            <div id="youtube-player"></div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" id="youtube-toggle">Play</button>
+                            </div>
                         </div>
                         <div class="field">
                             <label class="label" for="youtube-volume">Volume:</label>
@@ -171,29 +180,6 @@
         $('#brown-volume').on('input', function() {
             if (brownNoise) {
                 brownNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
-            }
-        });
-
-        $('#master-toggle').on('click', function() {
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-                $('#master-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
-            } else {
-                audioContext.suspend();
-                $('#master-toggle').text('Play').removeClass('is-danger').addClass('is-success');
-            }
-        });
-
-        $('#master-volume').on('input', function() {
-            let volume = this.value;
-            if (whiteNoise) {
-                whiteNoise.gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-            }
-            if (pinkNoise) {
-                pinkNoise.gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-            }
-            if (brownNoise) {
-                brownNoise.gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
             }
         });
     </script>
