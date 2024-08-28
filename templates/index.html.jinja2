@@ -62,6 +62,12 @@
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
         let gainNode = audioContext.createGain();
+        let bassFilter = audioContext.createBiquadFilter();
+        bassFilter.type = "lowshelf";
+        let trebleFilter = audioContext.createBiquadFilter();
+        trebleFilter.type = "highshelf";
+        let reverbNode = audioContext.createConvolver();
+
         let whiteNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
         let pinkNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
         let brownNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
@@ -108,9 +114,18 @@
             let noise = audioContext.createBufferSource();
             noise.buffer = noiseBuffer;
             noise.loop = true;
-            noise.connect(gainNode);
+            noise.connect(bassFilter);
+            bassFilter.connect(trebleFilter);
+            trebleFilter.connect(reverbNode);
+            reverbNode.connect(gainNode);
             gainNode.connect(audioContext.destination);
             gainNode.gain.setValueAtTime($('#volume').val(), audioContext.currentTime);
+            bassFilter.frequency.setValueAtTime(200, audioContext.currentTime);
+            bassFilter.gain.setValueAtTime($('#bass').val(), audioContext.currentTime);
+            trebleFilter.frequency.setValueAtTime(2000, audioContext.currentTime);
+            trebleFilter.gain.setValueAtTime($('#treble').val(), audioContext.currentTime);
+            // Reverb settings can be more complex, here we just set a simple gain for demonstration
+            reverbNode.buffer = whiteNoiseBuffer; // Simple reverb effect
             noise.start();
         });
 
@@ -118,11 +133,29 @@
             audioContext.close().then(function() {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 gainNode = audioContext.createGain();
+                bassFilter = audioContext.createBiquadFilter();
+                bassFilter.type = "lowshelf";
+                trebleFilter = audioContext.createBiquadFilter();
+                trebleFilter.type = "highshelf";
+                reverbNode = audioContext.createConvolver();
             });
         });
 
         $('#volume').on('input', function() {
             gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+        });
+
+        $('#bass').on('input', function() {
+            bassFilter.gain.setValueAtTime(this.value, audioContext.currentTime);
+        });
+
+        $('#treble').on('input', function() {
+            trebleFilter.gain.setValueAtTime(this.value, audioContext.currentTime);
+        });
+
+        $('#reverb').on('input', function() {
+            // Reverb settings can be more complex, here we just set a simple gain for demonstration
+            reverbNode.buffer = whiteNoiseBuffer; // Simple reverb effect
         });
     </script>
 {% endblock %}
