@@ -19,4 +19,10 @@ def get_database():
 async def read_root(request: Request):
     collection = get_database()
 
-    return templates.TemplateResponse("index.html.jinja2", {"request": request})
+    noises = [
+        {"id": "white", "title": "White Noise", "description": "White noise description.", "max_volume": 1, "step": 0.01},
+        {"id": "pink", "title": "Pink Noise", "description": "Pink noise description.", "max_volume": 1, "step": 0.01},
+        {"id": "brown", "title": "Brown Noise", "description": "Brown noise description.", "max_volume": 1, "step": 0.01}
+    ]
+
+    return templates.TemplateResponse("index.html.jinja2", {"request": request, "noises": noises})

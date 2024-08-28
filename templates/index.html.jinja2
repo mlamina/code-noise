@@ -3,50 +3,47 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
     <section class="section">
         <div class="container">
             <h2 class="title">Background Noise Generator</h2>
-            <div class="field">
-                <label class="label" for="volume">Volume:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="volume" name="volume" min="0" max="1" step="0.01" value="0.5">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label" for="frequency">Frequency:</label>
-                <div class="control">
-                    <input class="slider is-fullwidth" type="range" id="frequency" name="frequency" min="20" max="20000" step="1" value="440">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label" for="type">Type:</label>
-                <div class="control">
-                    <div class="select is-fullwidth">
-                        <select id="type" name="type">
-                            <option value="white">White</option>
-                            <option value="pink">Pink</option>
-                            <option value="brown">Brown</option>
-                        </select>
+            <p class="subtitle">Welcome to the Background Noise Generator for Programmers. Adjust the sliders to customize your perfect background noise.</p>
+            <div class="columns is-multiline is-variable is-8">
+                {% for noise in noises %}
+                <div class="column is-full">
+                    <div class="box">
+                        <div class="is-flex is-justify-content-space-between">
+                            <div>
+                                <h3 class="subtitle">{{ noise.title }}</h3>
+                                <p class="content">{{ noise.description }}</p>
+                            </div>
+                            <div class="field has-text-centered">
+                                <label class="label" for="{{ noise.id }}-volume">Volume:</label>
+                                <div class="control">
+                                    <input class="slider is-fullwidth" type="range" id="{{ noise.id }}-volume" name="{{ noise.id }}-volume" min="0" max="{{ noise.max_volume }}" step="{{ noise.step }}" value="0">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-success" id="{{ noise.id }}-toggle">Play</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-link" id="play">Play</button>
-                </div>
-                <div class="control">
-                    <button class="button is-link is-light" id="stop">Stop</button>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
 
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        let gainNode = audioContext.createGain();
-        let whiteNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
-        let pinkNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
-        let brownNoiseBuffer = audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate);
+
+        let noiseBuffers = {
+            white: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate),
+            pink: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate),
+            brown: audioContext.createBuffer(1, 2 * audioContext.sampleRate, audioContext.sampleRate)
+        };
 
         function generateNoise(buffer, type) {
             let output = buffer.getChannelData(0);
@@ -80,31 +77,79 @@
             }
         }
 
-        generateNoise(whiteNoiseBuffer, 'white');
-        generateNoise(pinkNoiseBuffer, 'pink');
-        generateNoise(brownNoiseBuffer, 'brown');
+        generateNoise(noiseBuffers.white, 'white');
+        generateNoise(noiseBuffers.pink, 'pink');
+        generateNoise(noiseBuffers.brown, 'brown');
 
-        $('#play').on('click', function() {
-            let type = $('#type').val();
-            let noiseBuffer = type === 'white' ? whiteNoiseBuffer : type === 'pink' ? pinkNoiseBuffer : brownNoiseBuffer;
+        function playNoise(buffer, volumeId) {
+            let gainNode = audioContext.createGain();
             let noise = audioContext.createBufferSource();
-            noise.buffer = noiseBuffer;
+            noise.buffer = buffer;
             noise.loop = true;
             noise.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            gainNode.gain.setValueAtTime($('#volume').val(), audioContext.currentTime);
+            gainNode.gain.setValueAtTime($('#' + volumeId).val(), audioContext.currentTime);
             noise.start();
+            return { noise, gainNode };
+        }
+
+        let noises = {};
+
+        function toggleNoise(noiseObj, buffer, volumeId, buttonId) {
+            if (!noiseObj) {
+                noiseObj = playNoise(buffer, volumeId);
+                $('#' + buttonId).text('Stop').removeClass('is-success').addClass('is-danger');
+            } else {
+                noiseObj.noise.stop();
+                noiseObj = null;
+                $('#' + buttonId).text('Play').removeClass('is-danger').addClass('is-success');
+            }
+            return noiseObj;
+        }
+
+        {% for noise in noises %}
+        $('#{{ noise.id }}-toggle').on('click', function() {
+            noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
         });
 
-        $('#stop').on('click', function() {
-            audioContext.close().then(function() {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                gainNode = audioContext.createGain();
+        $('#{{ noise.id }}-volume').on('input', function() {
+            if (noises['{{ noise.id }}']) {
+                noises['{{ noise.id }}'].gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
+            }
+        });
+        {% endfor %}
+    </script>
+
+    <script src="https://www.youtube.com/iframe_api?v=1e3332" ></script>
+
+    <script>
+        let youtubePlayer;
+
+        function onYouTubeIframeAPIReady() {
+            youtubePlayer = new YT.Player('youtube-player', {
+                height: '100',
+                width: '100%',
+                videoId: 'Nep1qytq9JM', // Replace with your video ID
+                events: {
+                    'onReady': onPlayerReady
+                }
             });
-        });
+        }
 
-        $('#volume').on('input', function() {
-            gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
-        });
+        function onPlayerReady(event) {
+            $('#youtube-toggle').on('click', function() {
+                if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                    youtubePlayer.pauseVideo();
+                    $('#youtube-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+                } else {
+                    youtubePlayer.playVideo();
+                    $('#youtube-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
+                }
+            });
+
+            $('#youtube-volume').on('input', function() {
+                youtubePlayer.setVolume(this.value);
+            });
+        }
     </script>
 {% endblock %}
