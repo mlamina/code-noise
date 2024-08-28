@@ -7,7 +7,7 @@
         <div class="container">
             <h2 class="title">Background Noise Generator</h2>
             <div class="columns is-multiline">
-                <div class="column is-one-third">
+                <div class="column is-one-quarter">
                     <div class="box">
                         <h3 class="subtitle">White Noise</h3>
                         <div class="field">
@@ -16,17 +16,14 @@
                                 <input class="slider is-fullwidth" type="range" id="white-volume" name="white-volume" min="0" max="1" step="0.01" value="0.5">
                             </div>
                         </div>
-                        <div class="field is-grouped">
+                        <div class="field">
                             <div class="control">
-                                <button class="button is-link" id="white-play">Play</button>
-                            </div>
-                            <div class="control">
-                                <button class="button is-link is-light" id="white-stop">Stop</button>
+                                <button class="button is-link" id="white-toggle">Play</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column is-one-third">
+                <div class="column is-one-quarter">
                     <div class="box">
                         <h3 class="subtitle">Pink Noise</h3>
                         <div class="field">
@@ -35,17 +32,14 @@
                                 <input class="slider is-fullwidth" type="range" id="pink-volume" name="pink-volume" min="0" max="1" step="0.01" value="0.5">
                             </div>
                         </div>
-                        <div class="field is-grouped">
+                        <div class="field">
                             <div class="control">
-                                <button class="button is-link" id="pink-play">Play</button>
-                            </div>
-                            <div class="control">
-                                <button class="button is-link is-light" id="pink-stop">Stop</button>
+                                <button class="button is-link" id="pink-toggle">Play</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column is-one-third">
+                <div class="column is-one-quarter">
                     <div class="box">
                         <h3 class="subtitle">Brown Noise</h3>
                         <div class="field">
@@ -54,12 +48,22 @@
                                 <input class="slider is-fullwidth" type="range" id="brown-volume" name="brown-volume" min="0" max="1" step="0.01" value="0.5">
                             </div>
                         </div>
-                        <div class="field is-grouped">
+                        <div class="field">
                             <div class="control">
-                                <button class="button is-link" id="brown-play">Play</button>
+                                <button class="button is-link" id="brown-toggle">Play</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h3 class="subtitle">YouTube Video</h3>
+                        <div class="field">
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/Nep1qytq9JM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="field">
                             <div class="control">
-                                <button class="button is-link is-light" id="brown-stop">Stop</button>
+                                <button class="button is-link" id="youtube-toggle">Play</button>
                             </div>
                         </div>
                     </div>
@@ -125,43 +129,28 @@
 
         let whiteNoise, pinkNoise, brownNoise;
 
-        document.getElementById('white-play').addEventListener('click', function() {
-            if (!whiteNoise) {
-                whiteNoise = playNoise(whiteNoiseBuffer, 'white-volume');
+        function toggleNoise(noiseObj, buffer, volumeId, buttonId) {
+            if (!noiseObj) {
+                noiseObj = playNoise(buffer, volumeId);
+                document.getElementById(buttonId).innerText = 'Stop';
+            } else {
+                noiseObj.noise.stop();
+                noiseObj = null;
+                document.getElementById(buttonId).innerText = 'Play';
             }
+            return noiseObj;
+        }
+
+        document.getElementById('white-toggle').addEventListener('click', function() {
+            whiteNoise = toggleNoise(whiteNoise, whiteNoiseBuffer, 'white-volume', 'white-toggle');
         });
 
-        document.getElementById('white-stop').addEventListener('click', function() {
-            if (whiteNoise) {
-                whiteNoise.noise.stop();
-                whiteNoise = null;
-            }
+        document.getElementById('pink-toggle').addEventListener('click', function() {
+            pinkNoise = toggleNoise(pinkNoise, pinkNoiseBuffer, 'pink-volume', 'pink-toggle');
         });
 
-        document.getElementById('pink-play').addEventListener('click', function() {
-            if (!pinkNoise) {
-                pinkNoise = playNoise(pinkNoiseBuffer, 'pink-volume');
-            }
-        });
-
-        document.getElementById('pink-stop').addEventListener('click', function() {
-            if (pinkNoise) {
-                pinkNoise.noise.stop();
-                pinkNoise = null;
-            }
-        });
-
-        document.getElementById('brown-play').addEventListener('click', function() {
-            if (!brownNoise) {
-                brownNoise = playNoise(brownNoiseBuffer, 'brown-volume');
-            }
-        });
-
-        document.getElementById('brown-stop').addEventListener('click', function() {
-            if (brownNoise) {
-                brownNoise.noise.stop();
-                brownNoise = null;
-            }
+        document.getElementById('brown-toggle').addEventListener('click', function() {
+            brownNoise = toggleNoise(brownNoise, brownNoiseBuffer, 'brown-volume', 'brown-toggle');
         });
 
         document.getElementById('white-volume').addEventListener('input', function() {
@@ -181,5 +170,31 @@
                 brownNoise.gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
         });
+
+        let youtubePlayer;
+        function onYouTubeIframeAPIReady() {
+            youtubePlayer = new YT.Player('youtube-player', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            document.getElementById('youtube-toggle').addEventListener('click', function() {
+                if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                    youtubePlayer.pauseVideo();
+                    document.getElementById('youtube-toggle').innerText = 'Play';
+                } else {
+                    youtubePlayer.playVideo();
+                    document.getElementById('youtube-toggle').innerText = 'Stop';
+                }
+            });
+        }
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 {% endblock %}
