@@ -21,7 +21,3 @@ async def read_root(request: Request):
 
     return templates.TemplateResponse("index.html.jinja2", {"request": request})
 
-
-@app.get("/volume-control", response_class=HTMLResponse)
-async def volume_control(request: Request):
-    return templates.TemplateResponse("volume_control.html.jinja2", {"request": request})
