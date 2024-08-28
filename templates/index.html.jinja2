@@ -17,16 +17,16 @@
                                 <h3 class="subtitle">{{ noise.title }}</h3>
                                 <p class="content">{{ noise.description }}</p>
                             </div>
+                            <div class="field has-text-centered">
+                                <label class="label" for="{{ noise.id }}-volume">Volume:</label>
+                                <div class="control">
+                                    <input class="slider is-fullwidth" type="range" id="{{ noise.id }}-volume" name="{{ noise.id }}-volume" min="0" max="{{ noise.max_volume }}" step="{{ noise.step }}" value="0">
+                                </div>
+                            </div>
                             <div class="field">
                                 <div class="control">
                                     <button class="button is-success" id="{{ noise.id }}-toggle">Play</button>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="field has-text-centered">
-                            <label class="label" for="{{ noise.id }}-volume">Volume:</label>
-                            <div class="control">
-                                <input class="slider is-fullwidth" type="range" id="{{ noise.id }}-volume" name="{{ noise.id }}-volume" min="0" max="{{ noise.max_volume }}" step="{{ noise.step }}" value="0">
                             </div>
                         </div>
                     </div>
