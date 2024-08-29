@@ -1,9 +1,6 @@
 # HackerNews Marketing Material
 
-## Title
+**Title:** Introducing Code Noise: Customizable Background Noise for Programmers
 
-Code Noise: Customizable Background Noise Generator for Programmers
-
-## Description
-
-As a programmer, finding the right environment to concentrate can be challenging. Music can be too distracting, and silence isn't always the answer. That's why we created [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise to help you focus and boost your productivity. Adjust the noise parameters with sliders to create your perfect coding environment. Try it out and let us know what you think!
+**Description:**
+As a programmer, finding the right environment to focus can be challenging. Music can be too distracting, and complete silence can be unsettling. That's why I built [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise specifically for programmers. Adjust the noise parameters with sliders to create your perfect work environment. Check it out and let me know what you think!
