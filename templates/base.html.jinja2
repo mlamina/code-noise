@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        var onYouTubeIframeAPIReadyCallbacks = [];
+
+        function onYouTubeIframeAPIReady() {
+            onYouTubeIframeAPIReadyCallbacks.forEach(function(callback) {
+                callback();
+            });
+        }
+
+        function addYouTubeIframeAPIReadyCallback(callback) {
+            onYouTubeIframeAPIReadyCallbacks.push(callback);
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar" role="navigation" aria-label="main navigation">
