@@ -80,6 +80,30 @@
     </div>
 
     <script>
+        function copyToClipboard() {
+            const el = document.createElement('textarea');
+
+            // Collect Values of all volume sliders
+            let params = new URLSearchParams();
+            {% for noise in noises %}
+            params.set('{{ noise.id }}', $('#{{ noise.id }}-volume').val());
+            {% endfor %}
+            {% for video in videos %}
+            params.set('yt_{{ video.id }}', $('#{{ video.id }}-volume').val() / 100);
+            {% endfor %}
+            el.value = window.location.origin + window.location.pathname + '?' + params.toString();
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const copyButton = document.getElementById('copyButton');
+            copyButton.classList.add('is-success');
+            copyButton.innerHTML = '<i class="fas fa-check"></i>';
+            copyButton.disabled = true;
+        }
+    </script>
+
+    <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         let noiseBuffers = {
