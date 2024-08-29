@@ -33,7 +33,6 @@
                 </div>
                 {% endfor %}
             </div>
-            <h2 class="title">YouTube Videos for Coders</h2>
             <div class="columns is-multiline is-variable is-8">
                 {% for video in videos %}
                 <div class="column is-full">
@@ -156,7 +155,7 @@
             youtubePlayers['{{ video.id }}'] = new YT.Player('{{ video.id }}-player', {
                 height: '100',
                 width: '100%',
-                videoId: '{{ video.youtube_id }}',
+                videoId: '{{ video.id }}',
                 events: {
                     'onReady': onPlayerReady('{{ video.id }}')
                 }

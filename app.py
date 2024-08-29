@@ -25,4 +25,10 @@ async def read_root(request: Request):
         {"id": "brown", "title": "Brown Noise", "description": "Deeper, bass-heavy sound, great for reducing stress and maintaining concentration", "max_volume": 1, "step": 0.01}
     ]
 
-    return templates.TemplateResponse("index.html.jinja2", {"request": request, "noises": noises})
+    videos = [
+        {"title": "Rain Sounds", "description": "Gentle rain sounds to help you relax and sleep better", "id": "BSmYxnvUDHw"},
+        {"title": "Ocean Waves", "description": "Calming ocean waves for stress relief and meditation", "id": "Nep1qytq9JM"},
+        {"title": "Forest Ambience", "description": "Soothing forest sounds to create a peaceful environment", "id": "xNN7iTA57jM"}
+    ]
+
+    return templates.TemplateResponse("index.html.jinja2", {"request": request, "noises": noises, "videos": videos})
