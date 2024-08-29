@@ -177,6 +177,7 @@
         {% for noise in noises %}
         $('#{{ noise.id }}-toggle').on('click', function() {
             noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
+            updateToggleAllButton();
         });
 
         $('#{{ noise.id }}-volume').on('input', function() {
@@ -188,15 +189,26 @@
             } else {
                 $('#{{ noise.id }}-toggle').prop('disabled', false);
             }
+            updateToggleAllButton();
         });
         {% endfor %}
 
+        function isNoisePlaying(noise_id) {
+            return noises[noise_id] && noises[noise_id].noise.playbackState === noises[noise_id].noise.PLAYING_STATE;
+        }
+
         $('#toggle-all').on('click', function() {
             let allPlaying = $(this).text() === 'Stop All';
+            let needToStop = allPlaying;
             $(this).text(allPlaying ? 'Play All' : 'Stop All').toggleClass('is-danger', !allPlaying).toggleClass('is-primary', allPlaying);
             {% for noise in noises %}
-            if ($('#{{ noise.id }}-volume').val() > 0) {
-                noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
+            if (isNoisePlaying('{{ noise.id }}') && needToStop) {
+                noises['{{ noise.id }}'].noise.stop();
+                noises['{{ noise.id }}'] = null;
+                $('#' + '{{ noise.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+            } else if ($('#{{ noise.id }}-volume').val() > 0 && !needToStop) {
+                noises['{{ noise.id }}'] = playNoise(noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume');
+                $('#' + '{{ noise.id }}-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
             }
             {% endfor %}
             {% for video in videos %}
@@ -240,12 +252,28 @@
 
             }
         });
+
+        function updateToggleAllButton() {
+            let anyPlaying = false;
+            {% for noise in noises %}
+            if (noises['{{ noise.id }}']) {
+                anyPlaying = true;
+            }
+            {% endfor %}
+            {% for video in videos %}
+            if (youtubePlayers['{{ video.id }}'] && youtubePlayers['{{ video.id }}'].getPlayerState() === YT.PlayerState.PLAYING) {
+                anyPlaying = true;
+            }
+            {% endfor %}
+            $('#toggle-all').text(anyPlaying ? 'Stop All' : 'Play All').toggleClass('is-danger', anyPlaying).toggleClass('is-primary', !anyPlaying);
+        }
     </script>
 
     <script src="https://www.youtube.com/iframe_api?v=1e3332"></script>
 
     <script>
         let youtubePlayers = {};
+        window.youtubePlayers = youtubePlayers;
 
         function onYouTubeIframeAPIReady() {
             {% for video in videos %}
@@ -287,6 +315,8 @@
                         youtubePlayers[videoId].playVideo();
                         $('#' + videoId + '-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
                     }
+                    // Wait for the player to start playing
+                    setTimeout(updateToggleAllButton, 1000);
                 });
 
                 $('#' + videoId + '-volume').on('input', function() {
@@ -296,6 +326,7 @@
                     } else {
                         $('#' + videoId + '-toggle').prop('disabled', false);
                     }
+                    updateToggleAllButton();
                 });
             }
         }
