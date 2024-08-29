@@ -1,7 +1,3 @@
 # Newsletter Marketing Material
 
-## Newsletter Paragraph
-
-🎧 **Introducing Code Noise: Customizable Background Noise for Programmers**
-
-Are you a programmer struggling to find the perfect auditory environment to focus? Music can be too distracting, and silence isn't always the answer. That's why we created [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise to help you concentrate. Adjust the noise parameters with sliders to create your ideal coding environment. Try it out today and boost your productivity!
+Looking for the perfect background noise to enhance your coding sessions? Check out [Code Noise](https://code-noise.vercel.app)! Created by Marco Lamina, this web app allows you to generate and customize ambient noise to help you focus better. Whether you need the hum of a coffee shop or the soothing sound of rain, Code Noise lets you create your ideal work environment. Try it out and boost your productivity today!
