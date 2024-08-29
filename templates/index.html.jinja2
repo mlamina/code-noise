@@ -33,6 +33,32 @@
                 </div>
                 {% endfor %}
             </div>
+            <h2 class="title">YouTube Videos for Coders</h2>
+            <div class="columns is-multiline is-variable is-8">
+                {% for video in videos %}
+                <div class="column is-full">
+                    <div class="box">
+                        <div class="columns is-flex is-justify-content-space-between is-align-items-center">
+                            <div class="column is-half">
+                                <h3 class="subtitle">{{ video.title }}</h3>
+                                <div id="{{ video.id }}-player"></div>
+                            </div>
+                            <div class="column">
+                                <label class="label" for="{{ video.id }}-volume">Volume:</label>
+                                <div class="control">
+                                    <input class="slider is-fullwidth" type="range" id="{{ video.id }}-volume" name="{{ video.id }}-volume" min="0" max="100" step="1" value="50">
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="control">
+                                    <button class="button is-success" id="{{ video.id }}-toggle">Play</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
@@ -123,33 +149,37 @@
     <script src="https://www.youtube.com/iframe_api?v=1e3332" ></script>
 
     <script>
-        let youtubePlayer;
+        let youtubePlayers = {};
 
         function onYouTubeIframeAPIReady() {
-            youtubePlayer = new YT.Player('youtube-player', {
+            {% for video in videos %}
+            youtubePlayers['{{ video.id }}'] = new YT.Player('{{ video.id }}-player', {
                 height: '100',
                 width: '100%',
-                videoId: 'Nep1qytq9JM', // Replace with your video ID
+                videoId: '{{ video.youtube_id }}',
                 events: {
-                    'onReady': onPlayerReady
+                    'onReady': onPlayerReady('{{ video.id }}')
                 }
             });
+            {% endfor %}
         }
 
-        function onPlayerReady(event) {
-            $('#youtube-toggle').on('click', function() {
-                if (youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-                    youtubePlayer.pauseVideo();
-                    $('#youtube-toggle').text('Play').removeClass('is-danger').addClass('is-success');
-                } else {
-                    youtubePlayer.playVideo();
-                    $('#youtube-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
-                }
-            });
+        function onPlayerReady(videoId) {
+            return function(event) {
+                $('#' + videoId + '-toggle').on('click', function() {
+                    if (youtubePlayers[videoId].getPlayerState() === YT.PlayerState.PLAYING) {
+                        youtubePlayers[videoId].pauseVideo();
+                        $('#' + videoId + '-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+                    } else {
+                        youtubePlayers[videoId].playVideo();
+                        $('#' + videoId + '-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
+                    }
+                });
 
-            $('#youtube-volume').on('input', function() {
-                youtubePlayer.setVolume(this.value);
-            });
+                $('#' + videoId + '-volume').on('input', function() {
+                    youtubePlayers[videoId].setVolume(this.value);
+                });
+            }
         }
     </script>
 {% endblock %}
