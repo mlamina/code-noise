@@ -2,8 +2,10 @@
 
 ## LinkedIn Post
 
-🚀 **Introducing Code Noise** 🚀
+🚀 **Introducing Code Noise: Customizable Background Noise for Programmers** 🚀
 
-As developers, we know how crucial it is to maintain focus during coding sessions. Music can often be too distracting, which is why we created Code Noise. Our new web app generates customizable background noise to help you concentrate and boost productivity. With easy-to-use sliders, you can create the perfect sound environment tailored to your preferences. Try it out today and experience the difference: [Code Noise](https://code-noise.vercel.app)
+As programmers, we know how challenging it can be to find the perfect environment to concentrate. Music can be too distracting, and silence isn't always the answer. That's why we created [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise to help you focus and boost your productivity.
 
-#Coding #Productivity #WebDevelopment #Focus #Developers
+With Code Noise, you can adjust the noise parameters with sliders to create your ideal coding environment. Whether you prefer the sound of rain, white noise, or a bustling coffee shop, Code Noise has you covered.
+
+Try it out today and let us know how it works for you! #CodeNoise #Productivity #Programming #WebDevelopment
