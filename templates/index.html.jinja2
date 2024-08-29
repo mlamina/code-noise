@@ -177,6 +177,7 @@
         {% for noise in noises %}
         $('#{{ noise.id }}-toggle').on('click', function() {
             noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
+            updateToggleAllButton();
         });
 
         $('#{{ noise.id }}-volume').on('input', function() {
@@ -188,6 +189,7 @@
             } else {
                 $('#{{ noise.id }}-toggle').prop('disabled', false);
             }
+            updateToggleAllButton();
         });
         {% endfor %}
 
@@ -240,6 +242,23 @@
 
             }
         });
+
+        function updateToggleAllButton() {
+            let anyPlaying = false;
+            {% for noise in noises %}
+            if (noises['{{ noise.id }}']) {
+                anyPlaying = true;
+                break;
+            }
+            {% endfor %}
+            {% for video in videos %}
+            if (youtubePlayers['{{ video.id }}'] && youtubePlayers['{{ video.id }}'].getPlayerState() === YT.PlayerState.PLAYING) {
+                anyPlaying = true;
+                break;
+            }
+            {% endfor %}
+            $('#toggle-all').text(anyPlaying ? 'Stop All' : 'Play All').toggleClass('is-danger', anyPlaying).toggleClass('is-primary', !anyPlaying);
+        }
     </script>
 
     <script src="https://www.youtube.com/iframe_api?v=1e3332"></script>
@@ -287,6 +306,7 @@
                         youtubePlayers[videoId].playVideo();
                         $('#' + videoId + '-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
                     }
+                    updateToggleAllButton();
                 });
 
                 $('#' + videoId + '-volume').on('input', function() {
@@ -296,6 +316,7 @@
                     } else {
                         $('#' + videoId + '-toggle').prop('disabled', false);
                     }
+                    updateToggleAllButton();
                 });
             }
         }
