@@ -28,7 +28,8 @@ async def read_root(request: Request):
     videos = [
         {"title": "Rain Sounds", "description": "Gentle rain sounds to help you relax and sleep better", "id": "BSmYxnvUDHw"},
         {"title": "Ocean Waves", "description": "Calming ocean waves for stress relief and meditation", "id": "Nep1qytq9JM"},
-        {"title": "Forest Ambience", "description": "Soothing forest sounds to create a peaceful environment", "id": "xNN7iTA57jM"}
+        {"title": "Forest Ambience", "description": "Soothing forest sounds to create a peaceful environment", "id": "xNN7iTA57jM"},
+        {"title": "Star Trek Engine", "description": "Deep humming", "id": "ZPoqNeR3_UA"}
     ]
 
     return templates.TemplateResponse("index.html.jinja2", {"request": request, "noises": noises, "videos": videos})
