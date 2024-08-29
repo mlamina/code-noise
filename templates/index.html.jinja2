@@ -8,6 +8,10 @@
         <div class="container">
             <h2 class="title">Background Noise for Coders</h2>
             <p class="subtitle">Adjust the sliders to craft the perfect background noise</p>
+            <div class="buttons">
+                <button class="button is-primary" id="play-all">Play All</button>
+                <button class="button is-danger" id="stop-all">Stop All</button>
+            </div>
             <div class="columns is-multiline is-variable is-8">
                 {% for noise in noises %}
                 <div class="column is-full">
@@ -139,6 +143,34 @@
             }
         });
         {% endfor %}
+
+        $('#play-all').on('click', function() {
+            {% for noise in noises %}
+            if ($('#{{ noise.id }}-volume').val() > 0) {
+                noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
+            }
+            {% endfor %}
+            {% for video in videos %}
+            if ($('#{{ video.id }}-volume').val() > 0) {
+                youtubePlayers['{{ video.id }}'].playVideo();
+                $('#' + '{{ video.id }}-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
+            }
+            {% endfor %}
+        });
+
+        $('#stop-all').on('click', function() {
+            {% for noise in noises %}
+            if (noises['{{ noise.id }}']) {
+                noises['{{ noise.id }}'].noise.stop();
+                noises['{{ noise.id }}'] = null;
+                $('#' + '{{ noise.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+            }
+            {% endfor %}
+            {% for video in videos %}
+            youtubePlayers['{{ video.id }}'].pauseVideo();
+            $('#' + '{{ video.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+            {% endfor %}
+        });
     </script>
 
     <script src="https://www.youtube.com/iframe_api?v=1e3332"></script>
@@ -181,5 +213,26 @@
         if (window.YT && YT.Player) {
             onYouTubeIframeAPIReady();
         }
+
+        // Parse URL parameters and set volumes
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            if (key.startsWith('ty_')) {
+                const videoId = key.substring(3);
+                const volume = parseFloat(value);
+                if (youtubePlayers[videoId]) {
+                    youtubePlayers[videoId].setVolume(volume * 100);
+                    $('#' + videoId + '-volume').val(volume * 100);
+                }
+            } else {
+                const volume = parseFloat(value);
+                if (noiseBuffers[key]) {
+                    $('#' + key + '-volume').val(volume);
+                    if (volume > 0) {
+                        noises[key] = toggleNoise(noises[key], noiseBuffers[key], key + '-volume', key + '-toggle');
+                    }
+                }
+            }
+        });
     </script>
 {% endblock %}
