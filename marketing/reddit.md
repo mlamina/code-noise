@@ -5,24 +5,27 @@
 ### r/programming
 **Title:** Enhance Your Coding Sessions with Customizable Background Noise
 **Post:**
-Are you tired of music distracting you while coding? Check out our new web app, Code Noise! It generates customizable background noise to help you focus. Adjust the parameters with sliders to create the perfect environment for productivity. Try it out now: [Code Noise](https://code-noise.vercel.app)
+Hey fellow programmers! 👋
+
+Tired of music distracting you while coding? Check out [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise to help you focus. Adjust the noise parameters with sliders to create your perfect coding environment. Give it a try and let us know what you think!
 
 ### r/webdev
-**Title:** Introducing Code Noise: Customizable Background Noise for Developers
+**Title:** New Tool for Web Developers: Customizable Background Noise Generator
 **Post:**
-Hey fellow developers! We just launched Code Noise, a web app that generates background noise to help you concentrate while coding. You can customize the noise with sliders to suit your preferences. Give it a try and let us know what you think: [Code Noise](https://code-noise.vercel.app)
+Hello web developers!
+
+Introducing [Code Noise](https://code-noise.vercel.app), a new web app designed to help you concentrate by generating customizable background noise. Use sliders to adjust the noise to your liking and enhance your productivity. Perfect for those who find music too distracting while coding. Check it out and share your feedback!
 
 ### r/Productivity
-**Title:** Boost Your Productivity with Code Noise
+**Title:** Boost Your Productivity with Customizable Background Noise
 **Post:**
-Struggling to stay focused while working? Our new web app, Code Noise, might be the solution you need. It generates customizable background noise to create a distraction-free environment. Adjust the settings to find your perfect soundscape: [Code Noise](https://code-noise.vercel.app)
+Hi everyone!
+
+Struggling to stay focused while working? [Code Noise](https://code-noise.vercel.app) is here to help! This web app generates customizable background noise to create an ideal work environment. Adjust the noise parameters with sliders to suit your preferences. Try it out and let us know how it works for you!
 
 ### r/SideProject
 **Title:** Just Launched: Code Noise - Customizable Background Noise for Coders
 **Post:**
-Hi everyone! I’m excited to share my latest side project, Code Noise. It’s a web app that generates background noise to help you focus while coding. You can tweak the noise parameters with sliders to get the perfect sound. Check it out and let me know your thoughts: [Code Noise](https://code-noise.vercel.app)
+Hey SideProject community!
 
-### r/learnprogramming
-**Title:** Improve Your Coding Sessions with Code Noise
-**Post:**
-Learning to code and need a better way to concentrate? Try Code Noise, a web app that generates customizable background noise. Adjust the sliders to create the ideal environment for your study sessions: [Code Noise](https://code-noise.vercel.app)
+Excited to share my latest project: [Code Noise](https://code-noise.vercel.app). It's a web app that generates customizable background noise to help you focus while coding. Use sliders to tweak the noise to your liking. Would love to hear your thoughts and feedback!
