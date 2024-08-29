@@ -9,8 +9,8 @@
             <h2 class="title">Background Noise for Coders</h2>
             <p class="subtitle">Adjust the sliders to craft the perfect background noise</p>
             <div class="buttons">
-                <button class="button is-primary" id="play-all">Play All</button>
-                <button class="button is-danger" id="stop-all">Stop All</button>
+                <button class="button is-primary" id="toggle-all">Play All</button>
+                <button class="button is-info" id="share">Share</button>
             </div>
             <div class="columns is-multiline is-variable is-8">
                 {% for noise in noises %}
@@ -27,7 +27,7 @@
                                     <input class="slider" type="range" id="{{ noise.id }}-volume" name="{{ noise.id }}-volume" min="0" max="{{ noise.max_volume }}" step="{{ noise.step }}" value="0">
                                 </div>
                                 <div class="control">
-                                    <button class="button is-success" id="{{ noise.id }}-toggle">Play</button>
+                                    <button class="button is-success" id="{{ noise.id }}-toggle" disabled>Play</button>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                     <input class="slider" type="range" id="{{ video.id }}-volume" name="{{ video.id }}-volume" min="0" max="100" step="1" value="50">
                                 </div>
                                 <div class="control">
-                                    <button class="button is-success" id="{{ video.id }}-toggle">Play</button>
+                                    <button class="button is-success" id="{{ video.id }}-toggle" disabled>Play</button>
                                 </div>
                             </div>
                         </div>
@@ -60,6 +60,17 @@
             </div>
         </div>
     </section>
+
+    <div class="modal" id="share-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <p>Share this link:</p>
+                <input class="input" type="text" id="share-link" readonly>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
 
     <script>
         let audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -141,10 +152,17 @@
             if (noises['{{ noise.id }}']) {
                 noises['{{ noise.id }}'].gainNode.gain.setValueAtTime(this.value, audioContext.currentTime);
             }
+            if (this.value == 0) {
+                $('#{{ noise.id }}-toggle').prop('disabled', true);
+            } else {
+                $('#{{ noise.id }}-toggle').prop('disabled', false);
+            }
         });
         {% endfor %}
 
-        $('#play-all').on('click', function() {
+        $('#toggle-all').on('click', function() {
+            let allPlaying = $(this).text() === 'Stop All';
+            $(this).text(allPlaying ? 'Play All' : 'Stop All').toggleClass('is-danger', !allPlaying).toggleClass('is-primary', allPlaying);
             {% for noise in noises %}
             if ($('#{{ noise.id }}-volume').val() > 0) {
                 noises['{{ noise.id }}'] = toggleNoise(noises['{{ noise.id }}'], noiseBuffers['{{ noise.id }}'], '{{ noise.id }}-volume', '{{ noise.id }}-toggle');
@@ -152,24 +170,53 @@
             {% endfor %}
             {% for video in videos %}
             if ($('#{{ video.id }}-volume').val() > 0) {
-                youtubePlayers['{{ video.id }}'].playVideo();
-                $('#' + '{{ video.id }}-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
+                if (allPlaying) {
+                    youtubePlayers['{{ video.id }}'].pauseVideo();
+                    $('#' + '{{ video.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+                } else {
+                    youtubePlayers['{{ video.id }}'].playVideo();
+                    $('#' + '{{ video.id }}-toggle').text('Stop').removeClass('is-success').addClass('is-danger');
+                }
             }
             {% endfor %}
         });
 
-        $('#stop-all').on('click', function() {
+        $('#share').on('click', function() {
+            let params = new URLSearchParams();
             {% for noise in noises %}
-            if (noises['{{ noise.id }}']) {
-                noises['{{ noise.id }}'].noise.stop();
-                noises['{{ noise.id }}'] = null;
-                $('#' + '{{ noise.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
-            }
+            params.set('{{ noise.id }}', $('#{{ noise.id }}-volume').val());
             {% endfor %}
             {% for video in videos %}
-            youtubePlayers['{{ video.id }}'].pauseVideo();
-            $('#' + '{{ video.id }}-toggle').text('Play').removeClass('is-danger').addClass('is-success');
+            params.set('yt_{{ video.id }}', $('#{{ video.id }}-volume').val() / 100);
             {% endfor %}
+            let shareLink = window.location.origin + window.location.pathname + '?' + params.toString();
+            $('#share-link').val(shareLink);
+            $('#share-modal').addClass('is-active');
+        });
+
+        $('.modal-close, .modal-background').on('click', function() {
+            $('#share-modal').removeClass('is-active');
+        });
+
+        // Parse URL parameters and set volumes
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            if (key.startsWith('yt_')) {
+                const videoId = key.substring(3);
+                const volume = parseFloat(value) * 100;
+                if (youtubePlayers[videoId]) {
+                    youtubePlayers[videoId].setVolume(volume);
+                    $('#' + videoId + '-volume').val(volume);
+                }
+            } else {
+                const volume = parseFloat(value);
+                if (noiseBuffers[key]) {
+                    $('#' + key + '-volume').val(volume);
+                    if (volume > 0) {
+                        noises[key] = toggleNoise(noises[key], noiseBuffers[key], key + '-volume', key + '-toggle');
+                    }
+                }
+            }
         });
     </script>
 
@@ -205,6 +252,11 @@
 
                 $('#' + videoId + '-volume').on('input', function() {
                     youtubePlayers[videoId].setVolume(this.value);
+                    if (this.value == 0) {
+                        $('#{{ video.id }}-toggle').prop('disabled', true);
+                    } else {
+                        $('#{{ video.id }}-toggle').prop('disabled', false);
+                    }
                 });
             }
         }
@@ -213,26 +265,5 @@
         if (window.YT && YT.Player) {
             onYouTubeIframeAPIReady();
         }
-
-        // Parse URL parameters and set volumes
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.forEach((value, key) => {
-            if (key.startsWith('ty_')) {
-                const videoId = key.substring(3);
-                const volume = parseFloat(value);
-                if (youtubePlayers[videoId]) {
-                    youtubePlayers[videoId].setVolume(volume * 100);
-                    $('#' + videoId + '-volume').val(volume * 100);
-                }
-            } else {
-                const volume = parseFloat(value);
-                if (noiseBuffers[key]) {
-                    $('#' + key + '-volume').val(volume);
-                    if (volume > 0) {
-                        noises[key] = toggleNoise(noises[key], noiseBuffers[key], key + '-volume', key + '-toggle');
-                    }
-                }
-            }
-        });
     </script>
 {% endblock %}
