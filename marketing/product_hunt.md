@@ -4,44 +4,49 @@
 Code Noise
 
 ## Tagline
-Customizable background noise for programmers to boost focus and productivity.
+Customizable Background Noise Generator for Programmers
 
 ## Description
-Code Noise is a web app designed to help programmers maintain focus by generating customizable background noise. Music can often be too distracting, but with Code Noise, you can create the perfect sound environment using intuitive sliders. Whether you prefer the gentle hum of a coffee shop, the soothing sound of rain, or the steady buzz of white noise, Code Noise lets you tailor the auditory backdrop to your needs. Try it out and enhance your coding sessions today!
+As a programmer, finding the right environment to concentrate can be challenging. Music can be too distracting, and silence isn't always the answer. That's why we created Code Noise, a web app that generates customizable background noise to help you focus and boost your productivity. Adjust the noise parameters with sliders to create your perfect coding environment.
 
 ## Makers
-- [Your Name](https://www.linkedin.com/in/yourprofile)
+- Maker 1: [Your Name](https://www.linkedin.com/in/yourprofile)
 
 ## Hunter
-- [Your Name](https://www.linkedin.com/in/yourprofile)
+- Hunter: [Hunter's Name](https://www.producthunt.com/@hunterprofile)
+
+## What is the product?
+Code Noise is a web app that generates customizable background noise to help programmers focus and boost their productivity. Users can adjust the noise parameters with sliders to create their ideal coding environment.
+
+## Why do we need this product?
+Many programmers struggle with finding the right auditory environment to work in. Music can be too engaging and distracting, while complete silence can be unsettling. Code Noise provides a solution by offering customizable background noise to create the perfect work environment.
+
+## How does it work?
+1. Visit the Code Noise website.
+2. Use the sliders to customize the background noise to your liking.
+3. Enjoy enhanced focus and productivity with your perfect background noise.
+
+## Key Features
+- Customizable Noise: Adjust the noise parameters to create your ideal background sound.
+- User-Friendly Interface: Intuitive design for easy noise generation and customization.
+- Web-Based: Access Code Noise directly from your browser without any downloads.
 
 ## Links
-- [Website](https://code-noise.vercel.app)
+- Website: [Code Noise](https://code-noise.vercel.app)
+- Twitter: [@CodeNoiseApp](https://twitter.com/CodeNoiseApp)
 
-## Topics
-- Productivity
-- Developer Tools
-- Web App
+## Pricing
+Free
 
 ## Launch Date
 August 29, 2024
 
-## Questions
+## Category
+Productivity
 
-### 1. What is the product?
-Code Noise is a web app that generates customizable background noise to help programmers focus and boost productivity. Users can adjust the noise parameters using intuitive sliders to create their ideal sound environment.
+## Social Media
+- Twitter: [@CodeNoiseApp](https://twitter.com/CodeNoiseApp)
+- LinkedIn: [Code Noise](https://www.linkedin.com/company/code-noise)
 
-### 2. Why did you build it?
-As a programmer, I found that music often distracted me while coding. I wanted a solution that would provide a suitable auditory backdrop without the distractions of music. Code Noise was created to fill this gap and help other developers stay focused.
-
-### 3. What are the key features?
-- Customizable noise parameters
-- User-friendly interface
-- Web-based, no downloads required
-- Free to use
-
-### 4. How do I use it?
-Visit the [Code Noise website](https://code-noise.vercel.app), choose your preferred background noise, customize it using the sliders, and hit play to enjoy your personalized sound environment.
-
-### 5. What’s next for Code Noise?
-We plan to add more noise options and advanced customization features based on user feedback. Stay tuned for updates!
+## Comments
+We'd love to hear your feedback and see how Code Noise is helping you. Feel free to share your thoughts and suggestions with us!
