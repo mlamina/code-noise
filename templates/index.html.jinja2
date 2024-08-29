@@ -145,7 +145,7 @@
         {% endfor %}
     </script>
 
-    <script src="https://www.youtube.com/iframe_api?v=1e3332" ></script>
+    <script src="https://www.youtube.com/iframe_api?v=1e3332"></script>
 
     <script>
         let youtubePlayers = {};
@@ -179,6 +179,11 @@
                     youtubePlayers[videoId].setVolume(this.value);
                 });
             }
+        }
+
+        // Check if YT object is already defined
+        if (window.YT && YT.Player) {
+            onYouTubeIframeAPIReady();
         }
     </script>
 {% endblock %}
