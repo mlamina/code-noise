@@ -2,7 +2,17 @@ In order to get the word out and attract users to your project, we need to creat
 the idea and the benefits of your project. Help me create marketing materials tailored to the specific
 platform where we post the material.
 
-Link to the project: {{ env('PROJECT_URL') }}
+# Additional Info
+
+Here's some more info for you to personalize / customize the material:
+
+- Link to the project: {{ env('PROJECT_URL') }}
+- My name: {{ env('MAKER_NAME') }}
+
+Why I built it:
+{{ env('WHY_I_BUILT_IT') }}
+
+# Platforms
 
 ## Reddit
 - Search the internet for subreddits that might be interested in this project
@@ -39,3 +49,5 @@ For each of the platforms above, do the following:
 - Use appropriate hashtags and mentions where necessary
 - Make sure the content is tailored to the audience of the platform
 - Save the content for each platform as a Markdown file in `marketing/` with the platform name as the filename (e.g., `marketing/reddit.md`)
+
+Only create the Markdown files, do nothing else. Say "Marketing materials created" when you're done.
