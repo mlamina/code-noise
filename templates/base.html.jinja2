@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FastAPI App{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <script defer src="/_vercel/insights/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
@@ -40,5 +41,19 @@
         </p>
     </div>
 </footer>
+<script>
+    function copyToClipboard() {
+        const el = document.createElement('textarea');
+        el.value = window.location.href;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        const copyButton = document.getElementById('copyButton');
+        copyButton.classList.add('is-success');
+        copyButton.innerHTML = '<i class="fas fa-check"></i>';
+        copyButton.disabled = true;
+    }
+</script>
 </body>
 </html>
