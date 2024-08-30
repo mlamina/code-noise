@@ -10,12 +10,16 @@ services:
     ports:
       - "8000:80"
     depends_on:
-      - mongo
-  mongo:
-    image: mongo:latest
+      - db
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
-      - mongo-data:/data/db
+      - postgres-data:/var/lib/postgresql/data
 volumes:
-  mongo-data:
+  postgres-data:
