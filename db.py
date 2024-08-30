@@ -24,6 +24,8 @@ class Video(Base):
     video_id = Column(String)
 
 
+# Ensure the POSTGRES_URL is correctly formatted
+# Example: postgresql+psycopg2://username:password@hostname:port/database
 engine = create_engine(os.getenv('POSTGRES_URL'))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
