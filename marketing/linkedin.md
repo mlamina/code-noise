@@ -1,5 +1,7 @@
-# LinkedIn Marketing Material
+# LinkedIn Marketing Materials
 
-I'm excited to introduce [Code Noise](https://code-noise.vercel.app), a web app I developed to help programmers create the perfect background noise for deep focus. As someone who's sensitive to sound, I needed an easy way to generate customizable ambient noise to enhance my productivity. With Code Noise, you can adjust the noise parameters to find your ideal work environment. Check it out and let me know your thoughts!
+## LinkedIn Post
 
-#Productivity #Coding #DeveloperTools #Focus #BackgroundNoise
+🚀 Excited to introduce Code Noise! As a programmer, I often find music too distracting while coding. That's why I built [Code Noise](https://code-noise.vercel.app), a web app that generates customizable background noise to help you stay focused and productive. You can mix pink, white, and brown noise, and even add YouTube videos for the perfect coding environment. Check it out and let me know what you think! #Coding #Productivity #WebDevelopment #Focus
+
+*Marco Lamina*
