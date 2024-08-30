@@ -77,7 +77,9 @@ We chose the following technologies for this project:
 - **Jinja2**: A full-featured template engine for Python, used for rendering HTML templates.
 - **BulmaCSS**: A modern CSS framework based on Flexbox (via CDN).
 - **jQuery**: A fast, small, and feature-rich JavaScript library (via CDN).
-- **MongoDB**: A schema-less DB for storing data.
+- **PostgreSQL**: A powerful, open source object-relational database system.
+- **SQLAlchemy**: The Python SQL toolkit and Object Relational Mapper.
+- **Alembic**: A lightweight database migration tool for use with SQLAlchemy.
 
 This stack was chosen with the following goals in mind:
 - **Speed**: We chose technologies that allow for rapid development and iteration.
@@ -92,6 +94,11 @@ This stack was chosen with the following goals in mind:
 ├── templates/              # Directory for Jinja2 templates
 │   ├── base.html.jinja2    # Base template
 │   └── index.html.jinja2   # Index template
+├── alembic/                # Alembic configuration and migration files
+│   ├── env.py              # Alembic environment configuration
+│   └── versions/           # Directory for migration scripts
+│       └── 1_initial_migration.py  # Initial migration script
+├── alembic.ini             # Alembic configuration file
 ├── docker-compose.yml      # Docker Compose configuration file
 ├── Dockerfile              # Dockerfile for building the app's container image
 ├── requirements.txt        # Python dependencies
