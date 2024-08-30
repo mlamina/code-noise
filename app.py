@@ -2,34 +2,47 @@ from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.requests import Request
-from pymongo import MongoClient
+from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
+DATABASE_URL = "postgresql+psycopg2://user:password@postgresserver/db"
 
-def get_database():
-    """Connect to the MongoDB database and return the collection."""
-    client = MongoClient("mongodb://mongo/rapidPrototype")
-    return client['data_collection']
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
+class Noise(Base):
+    __tablename__ = "noises"
+    id = Column(String, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String)
+    max_volume = Column(Float)
+    step = Column(Float)
+
+class Video(Base):
+    __tablename__ = "videos"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String)
+    video_id = Column(String)
+
+Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    collection = get_database()
-
-    noises = [
-        {"id": "white", "title": "White Noise", "description": "Consistent, balanced sound across all frequencies, ideal for blocking distractions", "max_volume": 1, "step": 0.01},
-        {"id": "pink", "title": "Pink Noise", "description": "More natural, soothing frequency distribution, often used to improve focus", "max_volume": 1, "step": 0.01},
-        {"id": "brown", "title": "Brown Noise", "description": "Deeper, bass-heavy sound, great for reducing stress and maintaining concentration", "max_volume": 1, "step": 0.01}
-    ]
-
-    videos = [
-        {"title": "Rain Sounds", "description": "Gentle rain sounds to help you relax and sleep better", "id": "BSmYxnvUDHw"},
-        {"title": "Ocean Waves", "description": "Calming ocean waves for stress relief and meditation", "id": "Nep1qytq9JM"},
-        {"title": "Forest Ambience", "description": "Soothing forest sounds to create a peaceful environment", "id": "xNN7iTA57jM"},
-        {"title": "Star Trek Engine", "description": "Deep humming", "id": "ZPoqNeR3_UA"}
-    ]
+async def read_root(request: Request, db: SessionLocal = Depends(get_db)):
+    noises = db.query(Noise).all()
+    videos = db.query(Video).all()
 
     return templates.TemplateResponse("index.html.jinja2", {"request": request, "noises": noises, "videos": videos})
